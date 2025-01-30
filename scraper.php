@@ -1,5 +1,5 @@
 <?php
-//require 'vendor/autoload.php';
+
 include_once("simple_html_dom.php");
 
 // specify the target website's URL
@@ -41,22 +41,11 @@ curl_close($curl);
 $html = str_get_html($htmlContent);
 
 $body = $html->find("body", 0);
-$wordToFind = "مجلس";
 $links = $body->find("a");
-$targetLinks = [];
-// this code find every blog that have مجلس word
-foreach ($links as $link) {
-    if (str_contains($link->innertext, $wordToFind)) {
-        $href = $link->href;
-//        echo $href;
-//        echo "<br>";
-        // Links that have مجلس word in it
-        $targetLinks = saveAfterSubstring($href, "/fa/news/");
-//        echo $link->innertext;
-    }
-}
+$targetLinks = array();
 
-function saveAfterSubstring($string, $substring)
+
+function saveAfterSubstring($string, $substring): array
 {
     $position = strpos($string, $substring);
 
@@ -70,25 +59,45 @@ function saveAfterSubstring($string, $substring)
     return [];
 }
 
-function prependToArray($array, $stringToPrepend)
+// this code find every blog that have مجلس word
+$wordToFind = "مجلس";
+foreach ($links as $link) {
+    if (str_contains($link->href, $wordToFind)) {
+        $href = $link->href;
+//       echo $href;
+        $targetLinks = saveAfterSubstring($href, "/fa/news/");
+//        echo "<br>";
+        // Links that have مجلس word in it
+//        echo $link->innertext;
+//        var_dump($targetLinks);
+    }
+}
+
+print_r($targetLinks);
+die();
+//print_r($targetLinks);
+
+function prependToArray($array, $stringToPrepend): array
 {
-    // Use array_map to prepend the string to each element
-    return array_map(function ($item) use ($stringToPrepend) {
-        return $stringToPrepend . $item;
-    }, $array);
+    foreach ($array as $item) {
+        $modified[] = $stringToPrepend . $item;
+    }
+    return $modified;
 }
 
 $urlToAppend = "https://www.entekhab.ir";
 $targetLinks = prependToArray($targetLinks, $urlToAppend);
-foreach ($targetLinks as $link) {
-    $htmlsContent = str_get_html($link);
 
-    echo $link;
-    if ($htmlsContent === false) {
+
+foreach ($targetLinks as $link) {
+    $htmlContents = str_get_html($link);
+
+//    echo $link ."  <br>";
+    if ($htmlContents === false) {
         echo $link . " This link not found.";
         continue;
     }
-    $img = $htmlsContent->find("img");
+    $img = $htmlContents->find("img");
 //    echo count($img);
 }
 //if (strpos($body, $wordToFind)) {
