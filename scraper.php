@@ -44,50 +44,20 @@ $body = $html->find("body", 0);
 $links = $body->find("a");
 $targetLinks = array();
 
-
-function saveAfterSubstring($string, $substring): array
-{
-    $position = strpos($string, $substring);
-
-    if ($position !== false) {
-
-        $result = substr($string, $position);
-
-        return [$result];
-    }
-    // If the substring is not found, return an empty array
-    return [];
-}
-
 // this code find every blog that have مجلس word
 $wordToFind = "مجلس";
+$href = "";
 foreach ($links as $link) {
     if (str_contains($link->href, $wordToFind)) {
-        $href = $link->href;
-//       echo $href;
-        $targetLinks = saveAfterSubstring($href, "/fa/news/");
-//        echo "<br>";
-        // Links that have مجلس word in it
-//        echo $link->innertext;
-//        var_dump($targetLinks);
+        $MLink = $link->href;
+        $targetLinks[] = "https://www.entekhab.ir" . $MLink;
     }
 }
 
 print_r($targetLinks);
-die();
 //print_r($targetLinks);
 
-function prependToArray($array, $stringToPrepend): array
-{
-    foreach ($array as $item) {
-        $modified[] = $stringToPrepend . $item;
-    }
-    return $modified;
-}
-
-$urlToAppend = "https://www.entekhab.ir";
-$targetLinks = prependToArray($targetLinks, $urlToAppend);
-
+//print_r($targetLinks);
 
 foreach ($targetLinks as $link) {
     $htmlContents = str_get_html($link);
