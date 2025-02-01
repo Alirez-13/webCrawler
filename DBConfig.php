@@ -19,8 +19,9 @@ try {
 
     $createTable = "CREATE TABLE IF NOT EXISTS Links (
         URL_ID INT AUTO_INCREMENT PRIMARY KEY,
-        URL_Path VARCHAR(255) NOT NULL,
-        Word_Number BIGINT,
+        URL_Path VARCHAR(500) NOT NULL,
+        Word_Counter BIGINT,
+        Specific_Words VARCHAR(255),
         Img_Number BIGINT)";
 
     $connection->exec($createTable);

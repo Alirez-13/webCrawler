@@ -1,63 +1,77 @@
 <?php
 
 include_once("simple_html_dom.php");
-
+include("WebScraper.php");
 // specify the target website's URL
-$url = "https://www.entekhab.ir/fa/services/2/1";
+$url = "https://www.entekhab.ir/fa/ajax/services/2/1/70";
+//
+//// initialize a cURL session
+//$curl = curl_init();
+//
+//// set the website URL
+//curl_setopt($curl, CURLOPT_URL, $url);
+//
+//// return the response as a string
+//curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+//
+//// follow redirects
+//curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+//
+//// ignore SSL verification
+//curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+//
+//// execute the cURL session
+//$htmlContent = curl_exec($curl);
+//
+//// check for errors
+//if ($htmlContent === false) {
+//
+//    // handle the error
+//    $error = curl_error($curl);
+//    echo "curl error: " . $error;
+//    exit;
+//}
+//
+//// print the HTML content
+////echo $htmlContent;
+//
+//// close cURL session
+//curl_close($curl);
 
-// initialize a cURL session
-$curl = curl_init();
+$scrapObj = new WebScraper($url);
+$html = $scrapObj->scrape();
 
-// set the website URL
-curl_setopt($curl, CURLOPT_URL, $url);
+$tagsA = $html->find('a');
 
-// return the response as a string
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+if (empty($tagsA)) {
+    echo "This is a blank page";
+} else {
 
-// follow redirects
-curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+    var_dump($tagsA);
+}
+die();
 
-// ignore SSL verification
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+foreach ($tagsA as $tag) {
 
-// execute the cURL session
-$htmlContent = curl_exec($curl);
-
-// check for errors
-if ($htmlContent === false) {
-
-    // handle the error
-    $error = curl_error($curl);
-    echo "curl error: " . $error;
-    exit;
+    var_dump($tag->href);
 }
 
-// print the HTML content
-//echo $htmlContent;
-
-// close cURL session
-curl_close($curl);
-
-$html = str_get_html($htmlContent);
 
 $body = $html->find("body", 0);
-$links = $body->find("a");
+$aTags = $body->find("a");
 $targetLinks = array();
-
 // this code find every blog that have مجلس word
 $wordToFind = "مجلس";
 $href = "";
-foreach ($links as $link) {
+foreach ($aTags as $link) {
     if (str_contains($link->href, $wordToFind)) {
         $MLink = $link->href;
         $targetLinks[] = "https://www.entekhab.ir" . $MLink;
     }
 }
 
-print_r($targetLinks);
 //print_r($targetLinks);
 
-//print_r($targetLinks);
 
 foreach ($targetLinks as $link) {
     $htmlContents = str_get_html($link);
@@ -82,7 +96,9 @@ foreach ($targetLinks as $link) {
 //$html->find("title6");
 
 
-
-
+function isBlankPage($aTags)
+{
+    return empty($aTags);
+}
 
 
