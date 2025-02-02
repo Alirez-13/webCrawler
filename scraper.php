@@ -1,98 +1,58 @@
 <?php
+include_once("WebScraper.php");
+$url = "https://www.entekhab.ir";
+$word = "مجلس";
 
-include_once("simple_html_dom.php");
-include("WebScraper.php");
-// specify the target website's URL
-$url = "https://www.entekhab.ir/fa/ajax/services/2/1/70";
-//
-//// initialize a cURL session
-//$curl = curl_init();
-//
-//// set the website URL
-//curl_setopt($curl, CURLOPT_URL, $url);
-//
-//// return the response as a string
-//curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-//
-//// follow redirects
-//curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-//
-//// ignore SSL verification
-//curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-//
-//// execute the cURL session
-//$htmlContent = curl_exec($curl);
-//
-//// check for errors
-//if ($htmlContent === false) {
-//
-//    // handle the error
-//    $error = curl_error($curl);
-//    echo "curl error: " . $error;
-//    exit;
-//}
-//
-//// print the HTML content
-////echo $htmlContent;
-//
-//// close cURL session
-//curl_close($curl);
+$html = file_get_contents($url);
 
-$scrapObj = new WebScraper($url);
-$html = $scrapObj->scrape();
+if (str_contains($html, $word)) {
 
-$tagsA = $html->find('a');
-
-if (empty($tagsA)) {
-    echo "This is a blank page";
-} else {
-
-    var_dump($tagsA);
-}
-
-
-$body = $html->find("body", 0);
-$aTags = $body->find("a");
-$targetLinks = array();
-// this code find every blog that have مجلس word
-$wordToFind = "مجلس";
-$href = "";
-foreach ($aTags as $link) {
-    if (str_contains($link->href, $wordToFind)) {
-        $MLink = $link->href;
-        $targetLinks[] = "https://www.entekhab.ir" . $MLink;
+    if ($html === false) {
+        return false;
     }
-}
+    // Remove html tag
+    $text = strip_tags($html);
 
-//print_r($targetLinks);
+    $word_counter = str_word_count($html);
 
+    $myWord = str_word_count($word);
 
-foreach ($targetLinks as $link) {
-    $htmlContents = str_get_html($link);
+    $webScraper = WebScraper::getInstance();
+    $htmlDOM = $webScraper->scrape($url);
 
-//    echo $link ."  <br>";
-    if ($htmlContents === false) {
-        echo $link . " This link not found.";
-        continue;
+    // Find img tag in html
+    $numberOfImg = $htmlDOM->find("img");
+
+    $targetLinks = array();
+
+    $subDomains = $htmlDOM->find("a");
+    foreach ($subDomains as $link) {
+        // Find all links and add main base domain to fist of subDomain
+        if (str_contains($link->href, "/fa/news")) {
+            // Append base domain to sub
+            $targetLinks[] = "https://www.entekhab.ir" . $link->href;
+        }
     }
-    $img = $htmlContents->find("img");
-//    echo count($img);
+
+    echo count($targetLinks) . "<br>";
+    $finalLinks = array();
+    foreach ($targetLinks as $key => $link) {
+        // Extract HTML
+        $content = $webScraper->scrape($link);
+        $removedTag = strip_tags($content);
+
+        if (stripos($removedTag, $word)) {
+            echo str_word_count($content);
+            echo "<br>";
+            echo count($content->find("img"));
+            $finalLinks[] = $link;
+
+        }
+    }
+//    print_r($finalLinks);
+
 }
-//if (strpos($body, $wordToFind)) {
-//    var_dump(strpos($body, $wordToFind));
-//}
-//
-//// Count Images
-//$image = $html->find("img");
-//$imgCount = count($image);
-//echo "$imgCount number of image";
-//
-//$html->find("title6");
 
 
-function isBlankPage($aTags)
-{
-    return empty($aTags);
-}
 
 
