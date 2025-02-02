@@ -49,12 +49,6 @@ if (empty($tagsA)) {
 
     var_dump($tagsA);
 }
-die();
-
-foreach ($tagsA as $tag) {
-
-    var_dump($tag->href);
-}
 
 
 $body = $html->find("body", 0);

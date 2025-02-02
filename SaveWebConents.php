@@ -3,30 +3,19 @@ require_once "Database.php";
 
 class SaveWebConents
 {
-    private string $URLPath;
-    private int $wordCounter;
-    private int $imgCounter;
-    private string $specificWordCounter;
+    private static ?SaveWebConents $instance = null;
 
-    public function __construct($URLPath, $wordCounter, $imgCounter, $specificWordCounter)
-    {
-        $this->URLPath = $URLPath;
-        $this->wordCounter = $wordCounter;
-        $this->imgCounter = $imgCounter;
-        $this->specificWordCounter = $specificWordCounter;
-    }
-
-    public function saveToDb()
+    public function saveToDb($URLPath, $wordCounter, $imgCounter, $specificWordCounter)
     {
         try {
             $database = Database::getInstance();
             $connection = $database->getConnection();
             $query = "INSERT INTO Links (URL_Path, Word_Counter, Specific_Words, Img_Number) VALUES (:URL_Path, :word_counter, :Specific_Word, :img_number)";
             $stmt = $connection->prepare($query);
-            $stmt->bindParam(':URL_Path', $this->URLPath);
-            $stmt->bindParam(':word_counter', $this->wordCounter);
-            $stmt->bindParam(':Specific_Word', $this->specificWordCounter);
-            $stmt->bindParam(':img_number', $this->imgCounter);
+            $stmt->bindParam(':URL_Path', $URLPath);
+            $stmt->bindParam(':word_counter', $wordCounter);
+            $stmt->bindParam(':Specific_Word', $specificWordCounter);
+            $stmt->bindParam(':img_number', $imgCounter);
 
             if ($stmt->execute($query)) {
                 return true;
@@ -38,5 +27,11 @@ class SaveWebConents
         return false;
     }
 
-
+    public static function getInstance()
+    {
+        if (self::$instance == null) {
+            self::$instance = new SaveWebConents();
+        }
+        return self::$instance;
+    }
 }

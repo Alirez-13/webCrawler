@@ -3,23 +3,16 @@ include_once("simple_html_dom.php");
 
 class WebScraper
 {
+    private static ?WebScraper $instance = null;
 
-    private $url;
-
-    public function __construct($url)
-    {
-        $this->url = $url;
-    }
-
-
-    public function scrape()
+    public function scrape(string $url)
     {
 
         // initialize a cURL session
         $curl = curl_init();
 
         // set the website URL
-        curl_setopt($curl, CURLOPT_URL, $this->url);
+        curl_setopt($curl, CURLOPT_URL, $url);
 
         // return the response as a string
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -45,5 +38,13 @@ class WebScraper
         curl_close($curl);
         // Extract the html content
         return str_get_html($htmlContent);
+    }
+
+    public static function getInstance()
+    {
+        if (self::$instance == null) {
+            self::$instance = new WebScraper();
+        }
+        return self::$instance;
     }
 }

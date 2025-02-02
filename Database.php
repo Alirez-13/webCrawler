@@ -32,6 +32,7 @@ class Database
         }
         return self::$instance;
     }
+
     public function getConnection(): PDO
     {
         return $this->connection;
