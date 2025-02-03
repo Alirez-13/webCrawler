@@ -1,12 +1,12 @@
 <?php
-include_once("WebScraper.php");
-$url = "https://www.entekhab.ir";
-$word = "مجلس";
-
+include_once('WebScraper.php');
+$url = 'https://www.entekhab.ir';
+$word = 'مجلس';
+$targetLinks = array();
 $html = file_get_contents($url);
 
 if (str_contains($html, $word)) {
-
+    $targetLinks[] = $url;
     if ($html === false) {
         return false;
     }
@@ -23,33 +23,39 @@ if (str_contains($html, $word)) {
     // Find img tag in html
     $numberOfImg = $htmlDOM->find("img");
 
-    $targetLinks = array();
-
-    $subDomains = $htmlDOM->find("a");
+    $subDomains = $htmlDOM->find('a');
     foreach ($subDomains as $link) {
-        // Find all links and add main base domain to fist of subDomain
-        if (str_contains($link->href, "/fa/news")) {
-            // Append base domain to sub
-            $targetLinks[] = "https://www.entekhab.ir" . $link->href;
+        // Find all links
+        if (str_contains($link->href, '/fa/news/')) {
+            $tempURL = 'https://www.entekhab.ir' . $link->href;
+
+            $tempContent = $webScraper->scrape($tempURL);
+            $tagsRemoved = strip_tags($tempContent);
+
+            if (str_contains($tagsRemoved, $word)) {
+                // Append base domain to sub
+                print_r($tempURL);
+            }
         }
     }
 
-    echo count($targetLinks) . "<br>";
-    $finalLinks = array();
-    foreach ($targetLinks as $key => $link) {
-        // Extract HTML
-        $content = $webScraper->scrape($link);
-        $removedTag = strip_tags($content);
+//    var_dump($targetLinks);
 
-        if (stripos($removedTag, $word)) {
-            echo str_word_count($content);
-            echo "<br>";
-            echo count($content->find("img"));
-            $finalLinks[] = $link;
-
-        }
-    }
-//    print_r($finalLinks);
+//    $finalLinks = array();
+//    foreach ($targetLinks as $key => $link) {
+//        // Extract HTML
+//        $content = $webScraper->scrape($link);
+//        $removedTag = strip_tags($content);
+//
+//        if (str_contains($removedTag, $word)) {
+////            echo str_word_count($content);
+////            echo "<br>";
+////            echo count($content->find("img"));
+//            $finalLinks[] = $link;
+//
+//        }
+//    }
+//    var_dump($finalLinks);
 
 }
 

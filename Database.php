@@ -5,11 +5,8 @@ class Database
     private static ?Database $instance = null;
 
     // Property with getter method
-    private PDO $connection {
-        get {
-            return $this->connection;
-        }
-    }
+    private PDO $connection;
+
     private string $server = "127.0.0.1:3306";
     private string $username = "root";
     private string $password = "";

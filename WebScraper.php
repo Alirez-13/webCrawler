@@ -40,7 +40,7 @@ class WebScraper
         return str_get_html($htmlContent);
     }
 
-    public static function getInstance()
+    public static function getInstance(): ?WebScraper
     {
         if (self::$instance == null) {
             self::$instance = new WebScraper();
