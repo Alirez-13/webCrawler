@@ -53,7 +53,14 @@ class SaveWebContents
         try {
             $database = Database::getInstance();
             $connection = $database->getConnection();
-            $query = "SELECT URL_Path FROM Pages WHERE Plain_Text LIKE :searchTerm";
+            //Plain_Text LIKE :searchTerm
+//            $query = "SELECT URL_Path FROM pages WHERE :searchTerm";
+            $query = "SELECT URL_Path,
+       (MATCH(Plain_Text) AGAINST (:searchTerm IN NATURAL LANGUAGE MODE)) AS relevance
+FROM Pages
+WHERE MATCH(Plain_Text) AGAINST (:searchTerm IN NATURAL LANGUAGE MODE)
+ORDER BY relevance DESC";
+
             $stmt = $connection->prepare($query);
             $stmt->bindParam(':searchTerm', $searchTerm);
             if ($stmt->execute()) {

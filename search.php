@@ -45,14 +45,24 @@
 include_once('SaveWebContents.php');
 $save = SaveWebContents::getInstance();
 $search = array();
+$res = array();
+$query = "";
 if (isset($_POST['query'])) {
     $userSearch = $_POST['query'];
+//    $queryString = "";
+//    foreach ($userSearch as $value) {//Plain_Text LIKE
+//        $search[] = "Plain_Text LIKE '%" . $value . "%'";
+//    }
+//    $query .= implode(' ', $search);
+//    $res = $save->searchPageContent($query);
+
     // Tokenized each word
-    $tokenized = strtok($userSearch, ' ');
-    while ($tokenized !== false) {
-        $search[] = $save->searchPageContent('%' . $tokenized . '%');
-        $tokenized = strtok(' ');
-    }
+//    $tokenized = strtok($userSearch, ' ');
+//    while ($tokenized !== false) {
+//        $queryString .= "(CONVERT(Plain_Text USING utf8) LIKE '%$tokenized%') AND";
+//        $tokenized = strtok(' ');
+//    }
+    $search[] = $save->searchPageContent($userSearch);
 
     print_r($search);
 }
