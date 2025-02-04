@@ -52,7 +52,7 @@ if (isset($_POST['query'])) {
     $tokenized = strtok($userSearch, ' ');
     while ($tokenized !== false) {
         $search = '%' . $tokenized . '%';
-        // Remove word already added
+
         $tokenized = strtok(' ');
     }
     $result = $save->searchPageContent($search);
