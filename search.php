@@ -46,12 +46,16 @@ include_once('SaveWebContents.php');
 $save = SaveWebContents::getInstance();
 
 if (isset($_POST['query'])) {
-    $search = '%' . $_POST['query'] . '%';
+    $userSearch = $_POST['query'];
+    $search = '';
+    // Tokenized each word
+    $tokenized = strtok($userSearch, ' ');
+    while ($tokenized !== false) {
+        $search = '%' . $tokenized . '%';
+        // Remove word already added
+        $tokenized = strtok(' ');
+    }
     $result = $save->searchPageContent($search);
-    $result = $save->searchPageContent($search);
-//    print_r($result);
-
     print_r($result);
 }
-
 ?>

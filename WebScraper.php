@@ -37,7 +37,8 @@ class WebScraper
 
         curl_close($curl);
         // Extract the html content
-        return str_get_html($htmlContent);
+        //str_get_html($htmlContent)
+        return $htmlContent;
     }
 
     public static function getInstance(): ?WebScraper
