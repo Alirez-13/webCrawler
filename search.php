@@ -44,18 +44,17 @@
 <?php
 include_once('SaveWebContents.php');
 $save = SaveWebContents::getInstance();
-$result = '';
+$search = array();
 if (isset($_POST['query'])) {
     $userSearch = $_POST['query'];
-    $search = '';
     // Tokenized each word
     $tokenized = strtok($userSearch, ' ');
     while ($tokenized !== false) {
-        $search = '%' . $tokenized . '%';
-
+        $search[] = $save->searchPageContent('%' . $tokenized . '%');
         $tokenized = strtok(' ');
-        $result = $save->searchPageContent($search);
     }
-    print_r($result);
+
+    print_r($search);
 }
 ?>
+
