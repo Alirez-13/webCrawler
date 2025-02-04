@@ -44,7 +44,7 @@
 <?php
 include_once('SaveWebContents.php');
 $save = SaveWebContents::getInstance();
-
+$result = '';
 if (isset($_POST['query'])) {
     $userSearch = $_POST['query'];
     $search = '';
@@ -54,8 +54,8 @@ if (isset($_POST['query'])) {
         $search = '%' . $tokenized . '%';
 
         $tokenized = strtok(' ');
+        $result = $save->searchPageContent($search);
     }
-    $result = $save->searchPageContent($search);
     print_r($result);
 }
 ?>
