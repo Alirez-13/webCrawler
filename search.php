@@ -44,7 +44,7 @@
 <?php
 include_once('SaveWebContents.php');
 $save = SaveWebContents::getInstance();
-$search = array();
+$search = '';
 $res = array();
 $query = "";
 if (isset($_POST['query'])) {
@@ -62,9 +62,34 @@ if (isset($_POST['query'])) {
 //        $queryString .= "(CONVERT(Plain_Text USING utf8) LIKE '%$tokenized%') AND";
 //        $tokenized = strtok(' ');
 //    }
-    $search[] = $save->searchPageContent($userSearch);
-
-    print_r($search);
+    $search = $save->searchPageContent($userSearch);
+//    print_r($search);
 }
+
+
+$tabel = table_cell($search);
+echo $tabel;
+function table_cell($data)
+{
+
+    $return = "<table border='1'>";
+    foreach ($data as $key => $value) {
+        $return .= "<tr><td>$key</td><td>";
+        if (is_array($value)) {
+            $return .= table_cell($value);
+        } else {
+            $return .= $value;
+        }
+        $return .= "</td><tr>";
+    }
+    $return .= "</tr></table>";
+    return ($return);
+
+}
+
 ?>
+
+
+
+
 

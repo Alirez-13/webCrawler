@@ -57,9 +57,9 @@ class SaveWebContents
 //            $query = "SELECT URL_Path FROM pages WHERE :searchTerm";
             $query = "SELECT URL_Path,
        (MATCH(Plain_Text) AGAINST (:searchTerm IN NATURAL LANGUAGE MODE)) AS relevance
-FROM Pages
-WHERE MATCH(Plain_Text) AGAINST (:searchTerm IN NATURAL LANGUAGE MODE)
-ORDER BY relevance DESC";
+    FROM Pages
+    WHERE MATCH(Plain_Text) AGAINST (:searchTerm IN NATURAL LANGUAGE MODE)
+    ORDER BY relevance DESC";
 
             $stmt = $connection->prepare($query);
             $stmt->bindParam(':searchTerm', $searchTerm);
