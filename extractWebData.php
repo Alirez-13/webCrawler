@@ -13,6 +13,12 @@ if ($html === false) {
 }
 
 $saveData = SaveWebContents::getInstance();
+//$cleanHtmlPage = strip_tags($html);
+//$cleanHtmlPage = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $cleanHtmlPage);
+//if ($saveData->savePageContent($url, $cleanHtmlPage)) {
+//    echo 'good to go';
+//}
+//$html = str_get_html($html);
 $html = str_get_html($html);
 $subDomains = $html->find('a');
 $tempURL = array();
@@ -30,8 +36,9 @@ foreach ($removedDuplicationUrl as $uniqueUrl) {
     $tempContent = $webScraper->scrape($uniqueUrl);
 
     $cleaned_string = preg_replace('/<[^>]+>/', '', $tempContent);
+    $cleaned_string = preg_replace('/<script\b[^>]*>(.*?)<\/script>/', '', $cleaned_string);
 
     if ($saveData->savePageContent($uniqueUrl, $cleaned_string)) {
-        print "Added successfully" . '<br>';
+        print "Added successfully" . '\n';
     }
 }

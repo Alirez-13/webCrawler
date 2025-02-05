@@ -9,7 +9,6 @@
             text-align: center;
             margin: 50px;
         }
-
         .search-box {
             padding: 10px;
             width: 250px;
@@ -17,7 +16,6 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-
         .search-button {
             padding: 10px 15px;
             font-size: 16px;
@@ -27,20 +25,19 @@
             cursor: pointer;
             border-radius: 5px;
         }
-
         .search-button:hover {
             background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-
 <form action="" method="POST">
     <input type="text" name="query" class="search-box" placeholder="Search...">
     <button type="submit" class="search-button">Search</button>
 </form>
 </body>
 </html>
+
 <?php
 include_once('SaveWebContents.php');
 $save = SaveWebContents::getInstance();
@@ -67,8 +64,8 @@ if (isset($_POST['query'])) {
 }
 
 
-$tabel = table_cell($search);
-echo $tabel;
+$table = table_cell($search);
+echo $table;
 function table_cell($data)
 {
 
