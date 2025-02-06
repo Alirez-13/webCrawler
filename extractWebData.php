@@ -19,6 +19,7 @@ $saveData = SaveWebContents::getInstance();
 //    echo 'good to go';
 //}
 //$html = str_get_html($html);
+
 $html = str_get_html($html);
 $subDomains = $html->find('a');
 $tempURL = array();
